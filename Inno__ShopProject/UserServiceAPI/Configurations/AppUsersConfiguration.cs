@@ -21,6 +21,7 @@ namespace UserServiceAPI.Configurations
             builder.Property(x => x.PasswordHash)
                 .IsRequired();
             builder.Property(x => x.Role)
+                .HasConversion<String>()
                 .IsRequired();
             builder.Property(x => x.CreatedDate)
                 .IsRequired();
