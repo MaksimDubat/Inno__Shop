@@ -8,7 +8,7 @@ namespace UserServiceAPI.Infrastructure.Common
     public class UserRepository : EfRepositoryBase<AppUsers>, IUserRepository
     {
         private readonly MutableInnoShopDbContext _context;
-        public UserRepository(MutableInnoShopDbContext mutableDbContext, ReadonlyInnoShopDbContext readOnlyDbContext) : base(mutableDbContext, readOnlyDbContext)
+        public UserRepository(MutableInnoShopDbContext mutableDbContext) : base(mutableDbContext)
         {
             _context = mutableDbContext;
         }

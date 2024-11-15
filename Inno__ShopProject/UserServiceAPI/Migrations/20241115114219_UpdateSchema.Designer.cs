@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserServiceAPI.DataBaseAccess;
@@ -11,9 +12,11 @@ using UserServiceAPI.DataBaseAccess;
 namespace UserServiceAPI.Migrations
 {
     [DbContext(typeof(MutableInnoShopDbContext))]
-    partial class MutableInnoShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115114219_UpdateSchema")]
+    partial class UpdateSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,8 +188,8 @@ namespace UserServiceAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
@@ -199,8 +202,7 @@ namespace UserServiceAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(155)
-                        .HasColumnType("character varying(155)");
+                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -238,9 +240,6 @@ namespace UserServiceAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -248,7 +247,7 @@ namespace UserServiceAPI.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AppUsers", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

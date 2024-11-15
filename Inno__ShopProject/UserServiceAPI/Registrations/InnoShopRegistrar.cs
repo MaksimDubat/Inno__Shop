@@ -18,11 +18,8 @@ namespace UserServiceAPI.Registrations
             services.AddDbContext<MutableInnoShopDbContext>(options =>
                 options.UseNpgsql(connectionString)
             );
-            services.AddDbContext<ReadonlyInnoShopDbContext>(options =>
-                options.UseNpgsql(connectionString)
-            );
-
             services.AddScoped<IUserRepository, UserRepository>();
+            
         }
     }
 }

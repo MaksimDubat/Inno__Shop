@@ -10,22 +10,19 @@ namespace UserServiceAPI.Infrastructure.Common
     public class EfRepositoryBase<T> : IRepository<T> where T : class
     {
         public readonly MutableInnoShopDbContext MutableDbContext;
-        public readonly ReadonlyInnoShopDbContext ReadOnlyDbContext;
+        
 
         /// <inheritdoc/>
-        public EfRepositoryBase(
-            MutableInnoShopDbContext mutableDbContext,
-            ReadonlyInnoShopDbContext readOnlyDbContext)
+        public EfRepositoryBase(MutableInnoShopDbContext mutableDbContext)
         {
             MutableDbContext = mutableDbContext;
-            ReadOnlyDbContext = readOnlyDbContext;
         }
 
         /// <inheritdoc/>        
         public async Task AddAsync(T entity, CancellationToken cancellation)
         {
             await MutableDbContext.AddAsync(entity, cancellation);
-            await ReadOnlyDbContext.SaveChangesAsync(cancellation);
+            await MutableDbContext.SaveChangesAsync(cancellation);
         }
         /// <inheritdoc/>  
         public async Task<T> DeleteAsync(int id, CancellationToken cancellation)
@@ -42,7 +39,7 @@ namespace UserServiceAPI.Infrastructure.Common
         /// <inheritdoc/>  
         public Task<List<T>> GetAllAsync(CancellationToken cancellation)
         {
-            return ReadOnlyDbContext.Set<T>().ToListAsync(cancellation);
+            return MutableDbContext.Set<T>().ToListAsync(cancellation);
         }
         /// <inheritdoc/>  
         public async Task<T> GetAsync(int id, CancellationToken cancellation)

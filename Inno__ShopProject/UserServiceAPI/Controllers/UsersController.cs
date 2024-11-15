@@ -47,7 +47,7 @@ namespace UserServiceAPI.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(AppUsers user, CancellationToken cancellation, int id)
+        public async Task<IActionResult> UpdateUser(AppUsers user, CancellationToken cancellation, int id)  
         {
             if (id != user.UserId)
             {

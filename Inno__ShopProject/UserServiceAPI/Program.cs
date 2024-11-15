@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+using UserServiceAPI.DataBaseAccess;
 using UserServiceAPI.Registrations;
 
 namespace UserServiceAPI
@@ -13,6 +15,7 @@ namespace UserServiceAPI
             InnoShopRegistrar.RegisterRepositories(builder.Services, builder.Configuration);
 
             builder.Services.AddControllers();
+           
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
