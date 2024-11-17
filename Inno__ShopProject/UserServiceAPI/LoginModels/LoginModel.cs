@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserServiceAPI.LoginView.Model
+namespace UserServiceAPI.LoginModels
 {
-    public class LoginViewModel
+    /// <summary>
+    /// Модель для входа пользователя.
+    /// </summary>
+    public class LoginModel
     {
+
         /// <summary>
         /// Е-mail.
         /// </summary>

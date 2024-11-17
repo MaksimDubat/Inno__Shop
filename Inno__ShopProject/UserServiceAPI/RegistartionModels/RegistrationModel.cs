@@ -1,16 +1,15 @@
-﻿using Microsoft.Extensions.Primitives;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserServiceAPI.RegistartionView.Model
+namespace UserServiceAPI.RegistartionModels
 {
-    public class RegisterViewModel
+    public class RegistrationModel
     {
-        [Required]
-        public string Name { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        public string Name { get; set; } 
 
         [Required]
         [DataType(DataType.Password)]
@@ -21,6 +20,6 @@ namespace UserServiceAPI.RegistartionView.Model
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; }
     }
 }

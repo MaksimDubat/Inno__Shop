@@ -23,14 +23,16 @@ namespace UserServiceAPI.Infrastructure.Common
             _httpContextAccessor = httpContextAccessor;
         }
         /// <inheritdoc/>
-        public Task<IdentityResult> RegisterAsync(string name, string email, string password, CancellationToken cancellation)
+        public Task<IdentityResult> RegisterAsync(string email, string name, string password, CancellationToken cancellation)
         {
             var user = new AppUsers
             {
-                UserName = email,
                 Email = email,
+                UserName = email,
+                Name = name,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                CreatedDate = DateTime.UtcNow   
+                CreatedDate = DateTime.UtcNow,
+                Role = UserRole.User  
             };
             return _userManager.CreateAsync(user);
         }

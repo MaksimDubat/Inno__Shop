@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceAPI.Interface;
-using UserServiceAPI.LoginView.Model;
-using UserServiceAPI.RegistartionView.Model;
+using UserServiceAPI.LoginModels;
+using UserServiceAPI.RegistartionModels;
 
 namespace UserServiceAPI.Controllers
 {
-    //[ApiController]
-    //[Route("api/auth")]
+    [ApiController]
+    [Route("api/auth")]
     public class AccountController : Controller
     {
         private readonly IAuthenticationService _authenticationService;
@@ -16,15 +16,9 @@ namespace UserServiceAPI.Controllers
         {
             _authenticationService = authenticationService;
         }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return PartialView("_loginPartial");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, CancellationToken cancellation)
+        
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginModel model, CancellationToken cancellation)
         {
             if (await _authenticationService.SignInAsync(model.Email, model.Password, cancellation))
             {
@@ -35,34 +29,28 @@ namespace UserServiceAPI.Controllers
             return View();
         }
 
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout(CancellationToken cancellation)
         {
             await _authenticationService.SignOutAsync(cancellation);
-            return RedirectToAction("Index", "Home");
+            return Ok();
         }
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return PartialView("_RegisterPartial");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model, string name, CancellationToken cancellation)
+       
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegistrationModel model, CancellationToken cancellation)
         {
             var result = await _authenticationService.RegisterAsync(model.Email,model.Name, model.Password, cancellation);
             if (result.Succeeded)
             {
                 await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
-                return RedirectToAction("Index", "Home");
+                return Ok("Reg");
             }
-
-            var errors = result.Errors?.Select(x => x.Description).ToList() ?? [];
-
-            return PartialView("_RegisterPartial", new RegisterViewModel
+            else
             {
-                Errors = errors
-            });
+                var errors = result.Errors?.Select(x => x.Description).ToList();
+                return BadRequest(errors);
+            }
         }
     }
 }

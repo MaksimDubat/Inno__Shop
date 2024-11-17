@@ -25,10 +25,15 @@ namespace UserServiceAPI.Registrations
                 options.UseNpgsql(connectionString)
             );
             services.AddScoped<IUserRepository, UserRepository>();
-
-            services.AddIdentity<AppUsers, AppRoles>()
+         
+            services.AddIdentity<AppUsers, AppRoles>(options =>
+            {
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+";
+            })
                 .AddEntityFrameworkStores<MutableInnoShopDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
             services.AddAuthentication()
