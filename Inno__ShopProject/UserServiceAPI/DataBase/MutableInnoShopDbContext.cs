@@ -12,7 +12,10 @@ namespace UserServiceAPI.DataBaseAccess
         public MutableInnoShopDbContext() : base() { }
         public MutableInnoShopDbContext(DbContextOptions<MutableInnoShopDbContext> options) : base(options) { }
 
+       
+
         public DbSet<AppUsers> AppUsers { get; set; }
+        public DbSet<LoginResponse> LoginResponses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

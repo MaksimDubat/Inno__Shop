@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using UserServiceAPI.Entities;
 
 namespace UserServiceAPI.JwtSet.JwtGeneration
 {
@@ -17,13 +18,16 @@ namespace UserServiceAPI.JwtSet.JwtGeneration
         }
 
         /// <inheritdoc/>
-        public string GenerateToken()
+        public string GenerateToken(AppUsers user, IList<string> roles)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, "ApiClient"),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim (JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim (ClaimTypes.Name, user.Name),
             };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));    
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

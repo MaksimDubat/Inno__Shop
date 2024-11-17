@@ -34,8 +34,12 @@ namespace UserServiceAPI.Registrations
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+            
 
             var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+            services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+
             services.AddAuthentication()
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {

@@ -5,6 +5,11 @@
     /// </summary>
     public class LoginResponse
     {
+        public int Id { get; set; }
+        /// <summary>
+        /// Идентификатор пользователя.
+        /// </summary>
+        public string UserId { get; set; }
         /// <summary>
         /// Токен пользователя.
         /// </summary>

@@ -1,4 +1,6 @@
-﻿namespace UserServiceAPI.JwtSet.JwtGeneration
+﻿using UserServiceAPI.Entities;
+
+namespace UserServiceAPI.JwtSet.JwtGeneration
 {
     /// <summary>
     /// Интерфейс сервиса генерации токенов.
@@ -9,6 +11,6 @@
         /// Создает и возращает токен доступа.
         /// </summary>
         /// <returns></returns>
-        string GenerateToken();
+        string GenerateToken(AppUsers user, IList<string> roles);
     }
 }

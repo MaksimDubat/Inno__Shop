@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserServiceAPI.Interface;
+using UserServiceAPI.JwtSet.JwtAttribute;
 using UserServiceAPI.LoginModels;
 using UserServiceAPI.RegistartionModels;
 
@@ -16,17 +17,35 @@ namespace UserServiceAPI.Controllers
         {
             _authenticationService = authenticationService;
         }
-        
+
+        [JwtAuthorize(Roles = "Admin")]
+        [HttpGet("adminonly")]
+        public IActionResult AdminOnly()
+        {
+            return Ok("Admin mode");
+        }
+
+        [JwtAuthorize(Roles = "User")]
+        [HttpGet("useronly")]
+        public IActionResult UserOnly()
+        {
+            return Ok("User mode");
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model, CancellationToken cancellation)
         {
-            if (await _authenticationService.SignInAsync(model.Email, model.Password, cancellation))
+            try
             {
-                return RedirectToAction("Index", "Home");
+                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
+                return Ok(new { Token = token });
+            } 
+            catch (UnauthorizedAccessException)
+            {
+               return Unauthorized("Invalid");
             }
-
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return View();
+           
         }
 
         [HttpPost("logout")]
@@ -43,8 +62,8 @@ namespace UserServiceAPI.Controllers
             var result = await _authenticationService.RegisterAsync(model.Email,model.Name, model.Password, cancellation);
             if (result.Succeeded)
             {
-                await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
-                return Ok("Reg");
+                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
+                return Ok(new {Message =" reg god", Token = token});
             }
             else
             {

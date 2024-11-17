@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserServiceAPI.DataBaseAccess;
@@ -11,9 +12,11 @@ using UserServiceAPI.DataBaseAccess;
 namespace UserServiceAPI.Migrations
 {
     [DbContext(typeof(MutableInnoShopDbContext))]
-    partial class MutableInnoShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241117222128_FixLoginResponseTable")]
+    partial class FixLoginResponseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

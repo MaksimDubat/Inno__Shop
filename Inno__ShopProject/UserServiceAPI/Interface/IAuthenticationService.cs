@@ -14,7 +14,7 @@ namespace UserServiceAPI.Interface
         /// <param name="email">Email пользователя.</param>
         /// <param name="password">Пароль.</param>
         /// <param name="cancellation">Токен отмены операции.</param>
-        Task<bool> SignInAsync(string email, string password, CancellationToken cancellation);
+        Task<string> SignInAsync(string email, string password, CancellationToken cancellation);
 
         /// <summary>
         /// Осуществляет выход пользователя.

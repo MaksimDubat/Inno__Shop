@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserServiceAPI.DataBaseAccess;
@@ -11,9 +12,11 @@ using UserServiceAPI.DataBaseAccess;
 namespace UserServiceAPI.Migrations
 {
     [DbContext(typeof(MutableInnoShopDbContext))]
-    partial class MutableInnoShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241117221151_AddLoginResponseTable")]
+    partial class AddLoginResponseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,8 +268,8 @@ namespace UserServiceAPI.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(1255)
-                        .HasColumnType("character varying(1255)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
