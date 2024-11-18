@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserServiceAPI.RegistartionModels
+namespace UserServiceAPI.Models.RegistartionModels
 {
     public class RegistrationModel
     {
@@ -9,7 +9,7 @@ namespace UserServiceAPI.RegistartionModels
         public string Email { get; set; }
 
         [Required]
-        public string Name { get; set; } 
+        public string Name { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

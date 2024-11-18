@@ -1,21 +1,22 @@
-﻿namespace UserServiceAPI.Entities
+﻿namespace UserServiceAPI.Models.PasswordResetModels
 {
     /// <summary>
     /// Модель для восстановления пароля.
     /// </summary>
-    public class PasswordReset
+    public class PasswordResetModel
     {
         /// <summary>
-        /// Идентификатор пользователя.
+        /// Email пользователя.
         /// </summary>
-        public int UserId { get; set; }
+        public string Email { get; set; }
         /// <summary>
         /// Токен пользователя
         /// </summary>
         public string Token { get; set; }
         /// <summary>
-        /// Дата действия токена.
+        /// Новый пароль.
         /// </summary>
-        public DateTime ExpiresAt { get; set; }
+        public string NewPassword { get; set; }
+
     }
 }

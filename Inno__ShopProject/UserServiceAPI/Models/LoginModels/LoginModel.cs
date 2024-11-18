@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserServiceAPI.LoginModels
+namespace UserServiceAPI.Models.LoginModels
 {
     /// <summary>
     /// Модель для входа пользователя.

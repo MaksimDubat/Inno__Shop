@@ -16,6 +16,7 @@ namespace UserServiceAPI.DataBaseAccess
 
         public DbSet<AppUsers> AppUsers { get; set; }
         public DbSet<LoginResponse> LoginResponses { get; set; }
+        public DbSet<ConfirmCode> ConfirmCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

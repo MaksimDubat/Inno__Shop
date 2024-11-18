@@ -9,6 +9,8 @@ using UserServiceAPI.JwtSet.JwtGeneration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UserServiceAPI.EmailSet.EmaiGeneration;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 
 namespace UserServiceAPI.Registrations
@@ -33,10 +35,6 @@ namespace UserServiceAPI.Registrations
                 .AddEntityFrameworkStores<MutableInnoShopDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<IJwtGenerator, JwtGenerator>();
-            
-
             var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
             services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 
@@ -54,6 +52,17 @@ namespace UserServiceAPI.Registrations
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
                     };
                 });
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+
+            services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
+            services.AddScoped<IEmailSender, EmailSender>();
+            
+
+            
+            
+     
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserServiceAPI.DataBaseAccess;
@@ -11,9 +12,11 @@ using UserServiceAPI.DataBaseAccess;
 namespace UserServiceAPI.Migrations
 {
     [DbContext(typeof(MutableInnoShopDbContext))]
-    partial class MutableInnoShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118160110_EmailReset")]
+    partial class EmailReset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,34 +253,6 @@ namespace UserServiceAPI.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AppUsers", (string)null);
-                });
-
-            modelBuilder.Entity("UserServiceAPI.Entities.ConfirmCode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(155)
-                        .HasColumnType("character varying(155)");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("ConfirmCode", (string)null);
                 });
 
             modelBuilder.Entity("UserServiceAPI.Entities.LoginResponse", b =>
