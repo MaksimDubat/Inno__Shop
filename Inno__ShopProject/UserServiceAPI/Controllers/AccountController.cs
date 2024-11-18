@@ -38,14 +38,14 @@ namespace UserServiceAPI.Controllers
         {
             try
             {
-                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
-                return Ok(new { Token = token });
-            } 
+                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation); // to do почему токен не передется и норм ли это null
+                return Ok("good");
+            }
             catch (UnauthorizedAccessException)
             {
-               return Unauthorized("Invalid");
+                return Unauthorized("Invalid");
             }
-           
+
         }
 
         [HttpPost("logout")]

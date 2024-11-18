@@ -44,14 +44,18 @@ namespace UserServiceAPI.Infrastructure.Common
         /// <inheritdoc/>
         public async Task<string> SignInAsync(string email, string password, CancellationToken cancellation)
         {
-            var user = await _userManager.FindByNameAsync(email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, password ))
+            var user = await _userManager.FindByNameAsync(email)
+                ?? throw new UnauthorizedAccessException("invalid email");
+            if (user != null || !await _userManager.CheckPasswordAsync(user, password ))
             {
-                throw new UnauthorizedAccessException("error");
+                await _signInManager.SignInAsync(user, isPersistent: true);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("invalid access");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtGenerator.GenerateToken(user, roles);
-
             var dbContext = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<MutableInnoShopDbContext>();
             var userToken = new LoginResponse
             {
