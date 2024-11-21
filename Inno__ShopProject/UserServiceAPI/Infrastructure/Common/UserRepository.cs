@@ -15,7 +15,7 @@ namespace UserServiceAPI.Infrastructure.Common
 
         public async Task<AppUsers> GetUserByEmailAsync(string email, CancellationToken cancellation)
         {
-           return await _context.AppUsers.FirstOrDefaultAsync(u => u.Email == email);
+           return await _context.AppUsers.FirstOrDefaultAsync(u => u.Email == email, cancellation);
            
         }
     }

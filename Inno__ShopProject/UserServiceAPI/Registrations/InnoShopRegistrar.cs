@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 namespace UserServiceAPI.Registrations
 {
     /// <summary>
-    /// Класс регистрации компонентов приложения.
+    /// Класс регистрации компонентов микросервиса пользователя.
     /// </summary>
     public class InnoShopRegistrar
     {

@@ -1,19 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserServiceAPI.DataBaseAccess;
-using UserServiceAPI.Interface;
+using ProductServiceAPI.DataBase;
+using ProductServiceAPI.Interface;
 
-namespace UserServiceAPI.Infrastructure.Common
+namespace ProductServiceAPI.Infrastructure.Common
 {
     /// <summary>
     /// Базовый репозиторий по работе с БД.
     /// </summary>
     public class EfRepositoryBase<T> : IRepository<T> where T : class
     {
-        private readonly MutableInnoShopDbContext MutableDbContext;
-        
-
+        private readonly MutableInnoShopProductDbContext MutableDbContext;
         /// <inheritdoc/>
-        public EfRepositoryBase(MutableInnoShopDbContext mutableDbContext)
+        public EfRepositoryBase(MutableInnoShopProductDbContext mutableDbContext)
         {
             MutableDbContext = mutableDbContext;
         }
@@ -27,14 +25,14 @@ namespace UserServiceAPI.Infrastructure.Common
         /// <inheritdoc/>  
         public async Task<T> DeleteAsync(int id, CancellationToken cancellation)
         {
-           var entity = await MutableDbContext.Set<T>().FindAsync(id, cancellation);
-           if (entity == null)
+            var entity = await MutableDbContext.Set<T>().FindAsync(id, cancellation);
+            if (entity == null)
             {
                 throw new KeyNotFoundException();
             }
-           MutableDbContext.Remove(entity);
-           await MutableDbContext.SaveChangesAsync(cancellation);
-           return entity;
+            MutableDbContext.Remove(entity);
+            await MutableDbContext.SaveChangesAsync(cancellation);
+            return entity;
         }
         /// <inheritdoc/>  
         public Task<List<T>> GetAllAsync(CancellationToken cancellation)

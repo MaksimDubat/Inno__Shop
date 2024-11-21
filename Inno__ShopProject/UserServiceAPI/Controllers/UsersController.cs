@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Npgsql.TypeMapping;
+﻿using Microsoft.AspNetCore.Mvc;
 using UserServiceAPI.Entities;
 using UserServiceAPI.Interface;
 
@@ -10,7 +7,7 @@ namespace UserServiceAPI.Controllers
 
     
     [ApiController]
-    [Microsoft.AspNetCore.Mvc.Route("api/users")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -26,7 +23,7 @@ namespace UserServiceAPI.Controllers
             var users = await _userRepository.GetAllAsync(cancellation);
             if (users == null)
             {
-                return NoContent();
+                return NotFound();
             }
             return Ok(users);
         }
@@ -40,21 +37,21 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(user);
         }
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult<AppUsers>> AddUser(AppUsers user, CancellationToken cancellation)
         {
             await _userRepository.AddAsync(user, cancellation);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(AppUsers user, CancellationToken cancellation, int id)  
+        [HttpPut("update/{id}")]
+        public async Task<ActionResult<AppUsers>> UpdateUser(AppUsers user, CancellationToken cancellation, int id)  
         {
             if (id != user.UserId)
             {
                 return BadRequest("error");
             }
             await _userRepository.UpdateAsync(user, cancellation);
-            return NoContent();
+            return Ok("updated");
         }
 
         [HttpDelete("{id}")]
@@ -66,9 +63,9 @@ namespace UserServiceAPI.Controllers
                return NotFound();
            }
            await _userRepository.DeleteAsync(id, cancellation);
-           return NoContent();
+           return Ok("deleted");
         }
-        [HttpGet("by-email")]
+        [HttpGet("byemail")]
         public async Task<ActionResult<AppUsers>> GetUserEmail(string email, CancellationToken cancellation, int id)
         {
             var user = await _userRepository.GetAsync(id, cancellation);
@@ -79,7 +76,7 @@ namespace UserServiceAPI.Controllers
             var userEmail = await _userRepository.GetUserByEmailAsync(email, cancellation);
             if (userEmail == null)
             {
-                return NoContent();
+                return NotFound();
             }
             return Ok(userEmail);
         }
