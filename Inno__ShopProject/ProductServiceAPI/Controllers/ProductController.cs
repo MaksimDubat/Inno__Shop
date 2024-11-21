@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductServiceAPI.Entities;
 using ProductServiceAPI.Interface;
+using ProductServiceAPI.Model.Filters;
 
 namespace ProductServiceAPI.Controllers
 {
@@ -10,9 +11,11 @@ namespace ProductServiceAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        public ProductController(IProductRepository productRepository)
+        private readonly IProductFiltration _productFiltration;
+        public ProductController(IProductRepository productRepository, IProductFiltration productFiltration)
         {
             _productRepository = productRepository;
+            _productFiltration = productFiltration;
         }
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(CancellationToken cancellation)
@@ -75,6 +78,16 @@ namespace ProductServiceAPI.Controllers
                 return NotFound();
             }
             return Ok(productName);
+        }
+        [HttpGet("filter")]
+        public async Task<ActionResult> GetFilteredProduct ([FromQuery] ProductFiltersModel filter, CancellationToken cancellation)
+        {
+            var product = await _productFiltration.GetFilteredProductsAsync(filter, cancellation);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
         }
     }
 }
