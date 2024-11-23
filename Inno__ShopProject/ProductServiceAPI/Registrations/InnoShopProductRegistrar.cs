@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using ProductServiceAPI.DataBase;
 using ProductServiceAPI.Infrastructure.Common;
 using ProductServiceAPI.Interface;
+using ProductServiceAPI.Validation;
 
 namespace ProductServiceAPI.Registrations
 {
@@ -17,6 +20,11 @@ namespace ProductServiceAPI.Registrations
                 options.UseNpgsql(connectionString)
             );
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddFluentValidationAutoValidation()
+                   .AddFluentValidationClientsideAdapters();
+
+            services.AddValidatorsFromAssemblyContaining<ProductFluentValidator>();
         }
+
     }
 }
