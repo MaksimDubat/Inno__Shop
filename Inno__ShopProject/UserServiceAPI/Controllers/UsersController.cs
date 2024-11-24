@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UserServiceAPI.Entities;
 using UserServiceAPI.Interface;
+using UserServiceAPI.JwtSet.JwtAttribute;
 
 namespace UserServiceAPI.Controllers
 {
@@ -11,13 +13,15 @@ namespace UserServiceAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
-
+      
         public UsersController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
 
+        
         [HttpGet("All")]
+        [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AppUsers>>> GetAllUsers(CancellationToken cancellation)
         {
             var users = await _userRepository.GetAllAsync(cancellation);
@@ -27,7 +31,9 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(users);
         }
+
         [HttpGet("{id}")]
+        [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> GetUserById(int id, CancellationToken cancellation)
         {
             var user = await _userRepository.GetAsync(id, cancellation);
@@ -37,13 +43,19 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(user);
         }
+
+       
         [HttpPost("add")]
+        [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> AddUser(AppUsers user, CancellationToken cancellation)
         {
             await _userRepository.AddAsync(user, cancellation);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
-        [HttpPut("update/{id}")]
+
+        
+        [HttpPost("update/{id}")]
+        [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<AppUsers>> UpdateUser(AppUsers user, CancellationToken cancellation, int id)  
         {
             if (id != user.UserId)
@@ -55,6 +67,7 @@ namespace UserServiceAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> DeletUser (int id, CancellationToken cancellation)
         {
            var user = await  _userRepository.GetAsync(id,cancellation);
@@ -65,7 +78,10 @@ namespace UserServiceAPI.Controllers
            await _userRepository.DeleteAsync(id, cancellation);
            return Ok("deleted");
         }
+
+
         [HttpGet("byemail")]
+        [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> GetUserEmail(string email, CancellationToken cancellation, int id)
         {
             var user = await _userRepository.GetAsync(id, cancellation);
@@ -80,6 +96,7 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(userEmail);
         }
-        
+
+
     }
 }   

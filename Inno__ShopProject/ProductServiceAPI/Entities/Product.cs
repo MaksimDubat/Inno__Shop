@@ -24,7 +24,7 @@
         /// <summary>
         /// Доступен ли.
         /// </summary>
-        public bool IsAvaliable { get; set; }
+        public bool IsAvaliable { get; set; } 
         /// <summary>
         /// Идентификатор пользователя, который взаимодействует с товаром.
         /// </summary>
@@ -33,5 +33,9 @@
         /// Дата создания.
         /// </summary>
         public DateTime CreatedAt { get; set; }
+        /// <summary>
+        /// Активен ли продукт.
+        /// </summary>
+        public bool IsActive { get; set; } = true;
     }
 }

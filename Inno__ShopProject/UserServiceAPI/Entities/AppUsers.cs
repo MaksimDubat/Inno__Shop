@@ -32,6 +32,10 @@ namespace UserServiceAPI.Entities
         /// Дата создания пользователя.
         /// </summary>
         public DateTime CreatedDate { get; set; }
+        /// <summary>
+        /// Активен ли пользователь.
+        /// </summary>
+        public bool IsActive { get; set; } = true;
 
     }
 }

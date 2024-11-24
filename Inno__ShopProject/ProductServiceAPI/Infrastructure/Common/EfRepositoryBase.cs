@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductServiceAPI.DataBase;
+using ProductServiceAPI.Entities;
 using ProductServiceAPI.Interface;
 
 namespace ProductServiceAPI.Infrastructure.Common
@@ -7,18 +8,21 @@ namespace ProductServiceAPI.Infrastructure.Common
     /// <summary>
     /// Базовый репозиторий по работе с БД.
     /// </summary>
-    public class EfRepositoryBase<T> : IRepository<T> where T : class
+    public class EfRepositoryBase<T> : IRepository<T> where T : Product
     {
         private readonly MutableInnoShopProductDbContext MutableDbContext;
+        private readonly IHttpContextAccessor HttpContextAccessor;
         /// <inheritdoc/>
         public EfRepositoryBase(MutableInnoShopProductDbContext mutableDbContext)
         {
             MutableDbContext = mutableDbContext;
+            HttpContextAccessor = new HttpContextAccessor();
         }
 
         /// <inheritdoc/>        
         public async Task AddAsync(T entity, CancellationToken cancellation)
         {
+
             await MutableDbContext.AddAsync(entity, cancellation);
             await MutableDbContext.SaveChangesAsync(cancellation);
         }
@@ -37,12 +41,16 @@ namespace ProductServiceAPI.Infrastructure.Common
         /// <inheritdoc/>  
         public Task<List<T>> GetAllAsync(CancellationToken cancellation)
         {
-            return MutableDbContext.Set<T>().ToListAsync(cancellation);
+            return MutableDbContext.Set<T>()
+                .Where(p => p.IsActive)
+                .ToListAsync(cancellation);
         }
         /// <inheritdoc/>  
-        public async Task<T> GetAsync(int id, CancellationToken cancellation)
+        public async Task<List<T>> GetAsync(int id, CancellationToken cancellation)
         {
-            return await MutableDbContext.Set<T>().FindAsync(id, cancellation);
+            return await MutableDbContext.Set<T>()
+                .Where(p=> p.Id == id && p.IsActive)
+                .ToListAsync(cancellation);
         }
         /// <inheritdoc/>  
         public Task UpdateAsync(T entity, CancellationToken cancellation)

@@ -1,13 +1,15 @@
-﻿namespace ProductServiceAPI.Interface
+﻿using ProductServiceAPI.Entities;
+
+namespace ProductServiceAPI.Interface
 {
-    public interface IRepository<T>  where T : class
+    public interface IRepository<T>  where T : Product
     {
         /// <summary>
         /// Получает сущность по идентификатору.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<T> GetAsync(int id, CancellationToken cancellation);
+        Task<List<T>> GetAsync(int id, CancellationToken cancellation);
         /// <summary>
         /// Добавляет сущность в БД.
         /// </summary>
