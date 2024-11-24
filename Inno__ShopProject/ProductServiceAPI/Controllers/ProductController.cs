@@ -41,7 +41,7 @@ namespace ProductServiceAPI.Controllers
         public async Task<ActionResult<Product>> AddProduct(Product product, CancellationToken cancellation)
         {
             await _productRepository.AddAsync(product, cancellation);
-            return CreatedAtAction(nameof(GetById), new { id = product.Id });
+            return Ok($"added {product.Name}");
         }
         [HttpPost("update/{id}")]
         public async Task<ActionResult<Product>> UpdateProduct(Product product, int id, CancellationToken cancellation)

@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using ProductServiceAPI.DataBase;
+using ProductServiceAPI.FiltrationSet;
 using ProductServiceAPI.Infrastructure.Common;
 using ProductServiceAPI.Interface;
 using ProductServiceAPI.Validation;
@@ -24,6 +25,7 @@ namespace ProductServiceAPI.Registrations
                    .AddFluentValidationClientsideAdapters();
 
             services.AddValidatorsFromAssemblyContaining<ProductFluentValidator>();
+            services.AddScoped<IProductFiltration, Filtration>();
         }
 
     }

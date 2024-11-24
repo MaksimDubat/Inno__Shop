@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using UserServiceAPI.CustomExceptionsFilter;
 using UserServiceAPI.DataBaseAccess;
 using UserServiceAPI.Registrations;
 
@@ -14,8 +15,11 @@ namespace UserServiceAPI
             // Add services to the container.
             InnoShopRegistrar.RegisterRepositories(builder.Services, builder.Configuration);
 
-            builder.Services.AddControllers();
-           
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<CustomExceptionFilter>();
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
