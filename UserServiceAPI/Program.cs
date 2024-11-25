@@ -36,9 +36,10 @@ namespace UserServiceAPI
             }
 
             app.UseHttpsRedirection();
-
-            app.UseAuthorization();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
 
 
 
