@@ -30,26 +30,9 @@ namespace UserServiceAPI.Controllers
             _userManager = userManager;
             _emailSender = emailSender;
             _dbContext = dbContext;
-        }
-
-        [HttpGet("adminonly")]
-        [JwtAuthorize(Roles = "Admin")]
-        public IActionResult AdminOnly()
-        {
-            return Ok("Admin mode");
-        }
-
-        
-        [HttpGet("useronly")]
-        [JwtAuthorize(Roles = "User")]
-        public IActionResult UserOnly()
-        {
-            return Ok("User mode");
-        }
-
+        }   
         
         [HttpPost("login")]
-        [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> Login(LoginModel model, CancellationToken cancellation)
         {
             try
@@ -66,16 +49,14 @@ namespace UserServiceAPI.Controllers
 
         
         [HttpPost("logout")]
-        [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> Logout(CancellationToken cancellation)
         {
             await _authenticationService.SignOutAsync(cancellation);
-            return Ok();
+            return Ok("logout");
         }
 
         
         [HttpPost("register")]
-        [JwtAuthorize(Roles = "User")]
         public async Task<IActionResult> Register(RegistrationModel model, CancellationToken cancellation)
         {
             var result = await _authenticationService.RegisterAsync(model.Email,model.Name, model.Password, cancellation);

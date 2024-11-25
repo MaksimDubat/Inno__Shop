@@ -36,7 +36,7 @@ namespace UserServiceAPI.Infrastructure.Common
                 Name = name,
                 PasswordHash = password,
                 CreatedDate = DateTime.UtcNow,
-                Role = UserRole.User  
+                Role = UserRole.Admin  
             };
            return await _userManager.CreateAsync(user, password);
          

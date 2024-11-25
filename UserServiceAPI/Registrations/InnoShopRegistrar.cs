@@ -52,7 +52,9 @@ namespace UserServiceAPI.Registrations
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
                     };
                 });
+           
 
+          
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
 

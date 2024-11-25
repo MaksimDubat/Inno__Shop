@@ -39,7 +39,7 @@ namespace UserServiceAPI.Controllers
             var user = await _userRepository.GetAsync(id, cancellation);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("not admin");
             }
             return Ok(user);
         }
@@ -73,7 +73,7 @@ namespace UserServiceAPI.Controllers
            var user = await  _userRepository.GetAsync(id,cancellation);
            if (user == null)
            {
-               return NotFound();
+               return NotFound("not admin");
            }
            await _userRepository.DeleteAsync(id, cancellation);
            return Ok("deleted");
@@ -87,7 +87,7 @@ namespace UserServiceAPI.Controllers
             var user = await _userRepository.GetAsync(id, cancellation);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("not admin");
             }
             var userEmail = await _userRepository.GetUserByEmailAsync(email, cancellation);
             if (userEmail == null)
