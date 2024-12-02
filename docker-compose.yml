@@ -1,44 +1,32 @@
-version: '3.9'
-
 services:
   userservice:
     build:
       context: .
       dockerfile: UserServiceAPI/Dockerfile
     ports:
-      - "5001:8080"
+      - "48001:8080"
     environment:
       - PRODUCTSERVICE_URL=http://productservice:8080
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
+      - postgres
       - rabbitmq
     networks:
       - app_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"] # Пример проверки здоровья
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s
 
   productservice:
     build:
       context: .
       dockerfile: ProductServiceAPI/Dockerfile
     ports:
-      - "5002:8080"
+      - "48002:8080"
     environment:
       - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     depends_on:
+      - postgres
       - rabbitmq
     networks:
       - app_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"] 
-      interval: 30s
-      retries: 5
-      start_period: 10s
-      timeout: 10s
 
   rabbitmq:
     image: rabbitmq:management
@@ -57,6 +45,23 @@ services:
       retries: 5
       start_period: 10s
       timeout: 10s
+
+  postgres:
+    image: postgres:17
+    container_name: inno-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   app_network:
