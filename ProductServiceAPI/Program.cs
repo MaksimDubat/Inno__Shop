@@ -1,8 +1,5 @@
-
-using FluentValidation.AspNetCore;
 using ProductServiceAPI.CustomExceptionsFilter;
 using ProductServiceAPI.Registrations;
-using ProductServiceAPI.Validation;
 
 namespace ProductServiceAPI
 {

@@ -8,7 +8,7 @@ namespace UserServiceAPI.Models.LoginModels
     public class LoginModel
     {
 
-        /// <summary>
+        /// <summary>   
         /// Е-mail.
         /// </summary>
         [Required]

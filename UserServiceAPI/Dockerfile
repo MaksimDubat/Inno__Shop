@@ -1,30 +1,29 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-
-# Этот этап используется для сборки проекта службы
+# Использовать официальный образ SDK для сборки
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["UserServiceAPI/UserServiceAPI.csproj", "UserServiceAPI/"]
-RUN dotnet restore "./UserServiceAPI/UserServiceAPI.csproj"
+
+# Копировать файлы проекта и восстановить зависимости
+COPY UserServiceAPI/UserServiceAPI.csproj ./UserServiceAPI/
+RUN dotnet restore ./UserServiceAPI/UserServiceAPI.csproj
+
+# Скопировать все остальные файлы проекта
 COPY . .
-WORKDIR "/src/UserServiceAPI"
-RUN dotnet build "./UserServiceAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./UserServiceAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Сборка проекта
+WORKDIR /src/UserServiceAPI
+RUN dotnet build UserServiceAPI.csproj -c $BUILD_CONFIGURATION -o /app/build
 
-# Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
-FROM base AS final
+# Публикация проекта
+RUN dotnet publish UserServiceAPI.csproj -c $BUILD_CONFIGURATION -o /app/publish
+
+# Использовать образ ASP.NET для выполнения приложения
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-COPY --from=publish /app/publish .
+EXPOSE 80
+
+# Копировать опубликованные файлы в образ для выполнения
+COPY --from=build /app/publish .
+
+# Настроить команду для запуска приложения
 ENTRYPOINT ["dotnet", "UserServiceAPI.dll"]

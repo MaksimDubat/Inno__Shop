@@ -9,7 +9,9 @@ using UserServiceAPI.JwtSet.JwtAttribute;
 
 namespace ProductServiceAPI.Controllers
 {
-
+    /// <summary>
+    /// Контроллер для работы с продуктом.
+    /// </summary>
     [ApiController]
     [Route("api/product")]
     public class ProductController : ControllerBase
@@ -29,7 +31,10 @@ namespace ProductServiceAPI.Controllers
             _httpClientFactory = httpClientFactory;
        
         }
-
+        /// <summary>
+        /// Получение всех продуктов.
+        /// </summary>
+        /// <param name="cancellation"></param>
         [HttpGet("all")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllProducts(CancellationToken cancellation)
@@ -41,6 +46,11 @@ namespace ProductServiceAPI.Controllers
             }
             return Ok(product);
         }
+        /// <summary>
+        /// Получение продукта по идентификатору.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpGet("{id}")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<Product>> GetById(int id, CancellationToken cancellation)
@@ -52,6 +62,11 @@ namespace ProductServiceAPI.Controllers
             }
             return Ok(product);
         }
+        /// <summary>
+        /// Добавление продукта.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("Add")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<Product>> AddProduct(Product product, CancellationToken cancellation)
@@ -65,6 +80,12 @@ namespace ProductServiceAPI.Controllers
             await _productRepository.AddAsync(product, cancellation);
             return Ok($"added {product.Name}");
         }
+        /// <summary>
+        /// Обновление продукта.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("update/{id}")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<Product>> UpdateProduct(Product product, int id, CancellationToken cancellation)
@@ -82,6 +103,11 @@ namespace ProductServiceAPI.Controllers
             await _productRepository.UpdateAsync(product, cancellation);
             return Ok("updated");
         }
+        /// <summary>
+        /// Удаление продукта.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpDelete("{id}")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<Product>> DeleteProduct(int id, CancellationToken cancellation)
@@ -100,7 +126,12 @@ namespace ProductServiceAPI.Controllers
             await _productRepository.DeleteAsync(id, cancellation);
             return Ok("deleted");
         }
-
+        /// <summary>
+        /// Получение наименования продукта.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpGet("byname")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<Product>> GetProductName(string name, int id, CancellationToken cancellation)
@@ -117,6 +148,11 @@ namespace ProductServiceAPI.Controllers
             }
             return Ok(productName);
         }
+        /// <summary>
+        /// Использование фильтрации продукта.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="cancellation"></param>
         [HttpGet("filter")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> GetFilteredProduct ([FromQuery] ProductFiltersModel filter, CancellationToken cancellation)
@@ -128,6 +164,12 @@ namespace ProductServiceAPI.Controllers
             }
             return Ok(product);
         }
+        /// <summary>
+        /// Статус продукта относительно пользователя.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="isActive"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("status")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> SetProductStatus(int userId, bool isActive, CancellationToken cancellation)
@@ -144,6 +186,11 @@ namespace ProductServiceAPI.Controllers
             await _mutableDbContext.SaveChangesAsync(); 
             return Ok("ststus updated");
         }
+        /// <summary>
+        /// Деактивация пользователя.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("deactivateUser/{id}")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateUser(int id, CancellationToken cancellation)

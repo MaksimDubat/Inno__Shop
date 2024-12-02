@@ -5,6 +5,9 @@ using ProductServiceAPI.Interface;
 
 namespace ProductServiceAPI.Infrastructure.Common
 {
+    /// <summary>
+    /// Репозиторий по работе с продуктами, расширяющий базовый.
+    /// </summary>
     public class ProductRepository : EfRepositoryBase<Product>, IProductRepository
     {
         private readonly MutableInnoShopProductDbContext _context;

@@ -4,6 +4,9 @@ using UserServiceAPI.Entities;
 
 namespace UserServiceAPI.Configurations
 {
+    /// <summary>
+    /// Конфигурация для сущности ConfirmCode.
+    /// </summary>
     public class ConfirmCodeConfiguration : IEntityTypeConfiguration<ConfirmCode>
     {
         public void Configure(EntityTypeBuilder<ConfirmCode> builder)

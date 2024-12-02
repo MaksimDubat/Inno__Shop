@@ -5,6 +5,9 @@ using UserServiceAPI.Interface;
 
 namespace UserServiceAPI.Infrastructure.Common
 {
+    /// <summary>
+    /// Репозиторий для работы с пользователями, расширяющий базовый репозиторий.
+    /// </summary>
     public class UserRepository : EfRepositoryBase<AppUsers>, IUserRepository
     {
         private readonly MutableInnoShopDbContext _context;

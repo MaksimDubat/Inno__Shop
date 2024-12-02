@@ -3,6 +3,9 @@ using ProductServiceAPI.Entities;
 
 namespace ProductServiceAPI.Validation
 {
+    /// <summary>
+    /// Класс валидатора для валидации продкутов.
+    /// </summary>
     public class ProductFluentValidator : AbstractValidator<Product>
     {
         public ProductFluentValidator()

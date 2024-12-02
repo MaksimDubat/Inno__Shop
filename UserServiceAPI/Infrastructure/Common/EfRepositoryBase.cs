@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using UserServiceAPI.DataBaseAccess;
 using UserServiceAPI.Interface;
 
@@ -34,7 +35,7 @@ namespace UserServiceAPI.Infrastructure.Common
             }
            MutableDbContext.Remove(entity);
            await MutableDbContext.SaveChangesAsync(cancellation);
-           return entity;
+            return entity;
         }
         /// <inheritdoc/>  
         public Task<List<T>> GetAllAsync(CancellationToken cancellation)

@@ -7,6 +7,9 @@ using UserServiceAPI.JwtSet.JwtGeneration;
 
 namespace UserServiceAPI.Infrastructure.Common
 {
+    /// <summary>
+    /// Класс реализации аутентификации и регистрации пользователя.
+    /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<AppUsers> _userManager;
@@ -36,7 +39,7 @@ namespace UserServiceAPI.Infrastructure.Common
                 Name = name,
                 PasswordHash = password,
                 CreatedDate = DateTime.UtcNow,
-                Role = UserRole.Admin  
+                Role = UserRole.User  
             };
            return await _userManager.CreateAsync(user, password);
          

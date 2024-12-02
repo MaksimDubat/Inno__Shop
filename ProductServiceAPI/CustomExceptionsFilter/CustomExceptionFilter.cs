@@ -4,6 +4,9 @@ using System.Net;
 
 namespace ProductServiceAPI.CustomExceptionsFilter
 {
+    /// <summary>
+    /// Класс, реализующий фильр исключений.
+    /// </summary>
     public class CustomExceptionFilter : IExceptionFilter
     {
         public void OnException(ExceptionContext context)
@@ -30,9 +33,9 @@ namespace ProductServiceAPI.CustomExceptionsFilter
                     errorMessage = "unexpected error";
                     break;
             }
-            var response = new 
+            context.Result = new JsonResult(new { StatusCode = statusCode, Error = errorMessage })
             {
-                statusCode = statusCode
+                StatusCode = statusCode
             };
             context.ExceptionHandled = true;
         }

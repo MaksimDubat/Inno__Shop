@@ -4,6 +4,9 @@ using UserServiceAPI.Entities;
 
 namespace UserServiceAPI.Configurations
 {
+    /// <summary>
+    /// Конфигурация для сущности LoginResponse.
+    /// </summary>
     public sealed class LoginResponseConfiguration : IEntityTypeConfiguration<LoginResponse>
     {
        

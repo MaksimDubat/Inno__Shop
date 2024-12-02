@@ -5,7 +5,7 @@ using UserServiceAPI.Entities;
 namespace UserServiceAPI.DataBaseAccess
 {
     /// <summary>
-    /// Контекст БД для управления сущностями пользователя и ролей, где данные будут изменятся.
+    /// Контекст БД для управления сущностями.
     /// </summary>
     public class MutableInnoShopDbContext : IdentityDbContext<AppUsers, AppRoles, int>
     {

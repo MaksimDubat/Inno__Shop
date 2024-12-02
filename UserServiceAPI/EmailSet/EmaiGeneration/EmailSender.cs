@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
@@ -7,6 +6,9 @@ using System.Threading.Tasks;
 using UserServiceAPI.EmailSet.EmaiGeneration;
 using UserServiceAPI.Entities;
 
+/// <summary>
+/// Класс реализации отправки Email через SMTP-сервер.
+/// </summary>
 public class EmailSender : IEmailSender
 {
     private readonly EmailOptions _emailOptions;

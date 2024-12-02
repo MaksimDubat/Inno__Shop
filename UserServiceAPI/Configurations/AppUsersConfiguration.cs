@@ -4,6 +4,9 @@ using UserServiceAPI.Entities;
 
 namespace UserServiceAPI.Configurations
 {
+    /// <summary>
+    /// Конфигурация для сущности AppUsers.
+    /// </summary>
     public class AppUsersConfiguration : IEntityTypeConfiguration<AppUsers>
     {
         public void Configure(EntityTypeBuilder<AppUsers> builder)

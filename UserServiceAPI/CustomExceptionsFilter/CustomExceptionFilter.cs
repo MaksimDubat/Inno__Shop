@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
 namespace UserServiceAPI.CustomExceptionsFilter
 {
+    /// <summary>
+    /// Класс, реализующий фильр исключений.
+    /// </summary>
     public class CustomExceptionFilter : IExceptionFilter
     {
         public void OnException(ExceptionContext context)
@@ -29,10 +34,11 @@ namespace UserServiceAPI.CustomExceptionsFilter
                     errorMessage = "unexpected error";
                     break;
             }
-            var response = new
+            var response = new JsonResult(new { error = errorMessage })
             {
-                statusCode = statusCode
+                StatusCode = statusCode
             };
+
             context.ExceptionHandled = true;
         }
 

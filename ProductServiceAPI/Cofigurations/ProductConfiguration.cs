@@ -4,6 +4,9 @@ using ProductServiceAPI.Entities;
 
 namespace ProductServiceAPI.Cofigurations
 {
+    /// <summary>
+    /// Конфигурация сущности продукта.
+    /// </summary>
     public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)

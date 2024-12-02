@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace UserServiceAPI.JwtSet.JwtAttribute
 {
+    /// <summary>
+    /// Расширение стандратного атрибута AuthorizeAttribute для работы с Jwt.
+    /// </summary>
     public class JwtAuthorizeAttribute : AuthorizeAttribute
     {
         public JwtAuthorizeAttribute()

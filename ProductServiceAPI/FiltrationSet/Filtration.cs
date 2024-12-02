@@ -8,6 +8,9 @@ using System.Linq.Expressions;
 
 namespace ProductServiceAPI.FiltrationSet
 {
+    /// <summary>
+    /// Класс для рализиации фильтрации продукта.
+    /// </summary>
     public class Filtration : IProductFiltration
     {
         private readonly MutableInnoShopProductDbContext _dbContext;
@@ -24,28 +27,28 @@ namespace ProductServiceAPI.FiltrationSet
             {
                 query = query.Where(p => p.Name.Contains(filter.Name));
             }
-            else if (filter.MinPrice.HasValue)
+            if (filter.MinPrice.HasValue)
             {
                 query= query.Where(p => p.Price <= filter.MinPrice.Value);
             }
-            else if(filter.MaxPrice.HasValue)
+            if(filter.MaxPrice.HasValue)
             {
                 query = query.Where(p => p.Price >= filter.MaxPrice.Value);
             }
-            else if(filter.IsActive.HasValue)
+            if(filter.IsActive.HasValue)
             {
                 query = query.Where(p => p.Equals(filter.IsActive.Value));
             }
-            else if(filter.CreatedBefore.HasValue)
+            if(filter.CreatedBefore.HasValue)
             {
                 query = query.Where(p => p.CreatedAt <= filter.CreatedBefore.Value);
             }
-            else if(filter.CreatedAfter.HasValue)
+            if(filter.CreatedAfter.HasValue)
             {
                 query = query.Where(p => p.CreatedAt >= filter.CreatedAfter.Value);
             }
-            
-            return await query.ToListAsync();   
+            cancellationToken.ThrowIfCancellationRequested();
+            return await query.ToListAsync(cancellationToken);   
         }
     }
 }

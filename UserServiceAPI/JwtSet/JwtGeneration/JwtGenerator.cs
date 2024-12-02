@@ -8,6 +8,9 @@ using UserServiceAPI.Entities;
 
 namespace UserServiceAPI.JwtSet.JwtGeneration
 {
+    /// <summary>
+    /// Класс для создания Jwt-токенов.
+    /// </summary>
     public class JwtGenerator : IJwtGenerator
     {
         private readonly JwtOptions _jwtOptions;

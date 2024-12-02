@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 using UserServiceAPI.Entities;
+using UserServiceAPI.Infrastructure.Common;
 using UserServiceAPI.Interface;
 using UserServiceAPI.JwtSet.JwtAttribute;
 
 namespace UserServiceAPI.Controllers
 {
-
-    
+    /// <summary>
+    /// Контроллер для работы с пользователем.
+    /// </summary>
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
@@ -19,7 +22,10 @@ namespace UserServiceAPI.Controllers
             _userRepository = userRepository;
         }
 
-        
+        /// <summary>
+        /// Получение всех пользователей.
+        /// </summary>
+        /// <param name="cancellation"></param>
         [HttpGet("All")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AppUsers>>> GetAllUsers(CancellationToken cancellation)
@@ -31,7 +37,11 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(users);
         }
-
+        /// <summary>
+        /// Получение пользователя по идентификатору.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpGet("{id}")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> GetUserById(int id, CancellationToken cancellation)
@@ -44,7 +54,11 @@ namespace UserServiceAPI.Controllers
             return Ok(user);
         }
 
-       
+        /// <summary>
+        /// Добавление пользователя.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("add")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> AddUser(AppUsers user, CancellationToken cancellation)
@@ -52,8 +66,12 @@ namespace UserServiceAPI.Controllers
             await _userRepository.AddAsync(user, cancellation);
             return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
-
-        
+        /// <summary>
+        /// Обновление пользователя.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellation"></param>
+        /// <param name="id"></param>
         [HttpPost("update/{id}")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<ActionResult<AppUsers>> UpdateUser(AppUsers user, CancellationToken cancellation, int id)  
@@ -62,10 +80,15 @@ namespace UserServiceAPI.Controllers
             {
                 return BadRequest("error");
             }
+           
             await _userRepository.UpdateAsync(user, cancellation);
             return Ok("updated");
         }
-
+        /// <summary>
+        /// Удаление пользователя.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
         [HttpDelete("{id}")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> DeletUser (int id, CancellationToken cancellation)
@@ -78,8 +101,12 @@ namespace UserServiceAPI.Controllers
            await _userRepository.DeleteAsync(id, cancellation);
            return Ok("deleted");
         }
-
-
+        /// <summary>
+        /// Получение Email пользователя.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="cancellation"></param>
+        /// <param name="id"></param>
         [HttpGet("byemail")]
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> GetUserEmail(string email, CancellationToken cancellation, int id)

@@ -14,6 +14,9 @@ using UserServiceAPI.Models.RegistartionModels;
 
 namespace UserServiceAPI.Controllers
 {
+    /// <summary>
+    /// Контроллер для работы с аккаунтом.
+    /// </summary>
     [ApiController]
     [Route("api/auth")]
     public class AccountController : Controller
@@ -31,14 +34,18 @@ namespace UserServiceAPI.Controllers
             _emailSender = emailSender;
             _dbContext = dbContext;
         }   
-        
+        /// <summary>
+        /// Осуществление входа пользователя.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model, CancellationToken cancellation)
         {
             try
             {
                 var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation); 
-                return Ok("good");
+                return Ok(new { Message = " log in god", Token = token });
             }
             catch (UnauthorizedAccessException)
             {
@@ -46,16 +53,22 @@ namespace UserServiceAPI.Controllers
             }
 
         }
-
-        
+        /// <summary>
+        /// Осуществление выхода пользователя.
+        /// </summary>
+        /// <param name="cancellation"></param>
+        /// <returns></returns>
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(CancellationToken cancellation)
         {
             await _authenticationService.SignOutAsync(cancellation);
             return Ok("logout");
         }
-
-        
+        /// <summary>
+        /// Осуществление регистрации пользователя.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="cancellation"></param>
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegistrationModel model, CancellationToken cancellation)
         {
@@ -71,8 +84,10 @@ namespace UserServiceAPI.Controllers
                 return BadRequest(errors);
             }
         }
-
-
+        /// <summary>
+        /// Осуществление функционала при потери пароля.
+        /// </summary>
+        /// <param name="model"></param>
         [HttpPost("ForgotPassword")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> ForgotPassword(PasswordResetModel model)
@@ -103,7 +118,10 @@ namespace UserServiceAPI.Controllers
             return Ok(new {Message = " get it"});
 
         }
-
+        /// <summary>
+        /// Осуществление функции восстановления пароля.
+        /// </summary>
+        /// <param name="model"></param>
         [HttpPost("ResetPassword")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> ResetPassword(PasswordResetModel model)
@@ -124,8 +142,10 @@ namespace UserServiceAPI.Controllers
             }
             return Ok(new {Message = "reset good"}  );
         }
-
-     
+        /// <summary>
+        /// Осуществление отправки для подтверждения.
+        /// </summary>
+        /// <param name="email"></param>
         [HttpPost("sendcode")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> SendConfirmCode(string email)
@@ -145,7 +165,11 @@ namespace UserServiceAPI.Controllers
             await _dbContext.SaveChangesAsync();    
             return Ok("code was sended");
         }
-
+        /// <summary>
+        /// Осуществление проверки кода.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="code"></param>
         [HttpPost("verifycode")]
         [JwtAuthorize(Roles = "Admin, User")]
         public async Task<IActionResult> VerifyConfirmCode(string email, string code)
