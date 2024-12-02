@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UserServiceAPI.Controllers;
 using UserServiceAPI.Entities;
@@ -36,9 +33,9 @@ namespace UserAPITests
             var result = await _controller.GetUserById(userId, CancellationToken.None);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var returnedUser = Assert.IsType<AppUsers>(okResult.Value);
-            Assert.Equals(userId, returnedUser.Id);
+            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);  // Проверяем тип ответа
+            var returnedUser = Xunit.Assert.IsType<AppUsers>(okResult.Value);  // Проверяем тип объекта в теле ответа
+            Xunit.Assert.Equal(userId, returnedUser.Id);  // Сравниваем ID пользователя
         }
 
         [Fact]
@@ -53,7 +50,7 @@ namespace UserAPITests
             var result = await _controller.GetUserById(userId, CancellationToken.None);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
+            Xunit.Assert.IsType<NotFoundResult>(result.Result);  // Проверяем, что возвращен NotFound
         }
     }
 }
