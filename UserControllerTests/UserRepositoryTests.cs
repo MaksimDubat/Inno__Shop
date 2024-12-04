@@ -33,8 +33,8 @@ namespace UserAPITests
             var result = await _repository.GetAsync(user.Id, CancellationToken.None);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.Equals(user.Id, result.Id);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(result);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Equals(user.Id, result.Id);
         }
     }
 }

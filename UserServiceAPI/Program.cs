@@ -1,8 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
-using UserServiceAPI.CustomExceptionsFilter;
 using UserServiceAPI.DataBaseAccess;
-using UserServiceAPI.Registrations;
+using UserServiceAPI.WebAPI.CustomExceptionsFilter;
+using UserServiceAPI.WebAPI.Registrations;
 
 namespace UserServiceAPI
 {

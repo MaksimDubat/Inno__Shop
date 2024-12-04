@@ -3,7 +3,7 @@ using Moq;
 using System.Threading;
 using System.Threading.Tasks;
 using UserServiceAPI.Controllers;
-using UserServiceAPI.Entities;
+using UserServiceAPI.Domain.Entities;
 using UserServiceAPI.Interface;
 using Xunit;
 
@@ -33,9 +33,9 @@ namespace UserAPITests
             var result = await _controller.GetUserById(userId, CancellationToken.None);
 
             // Assert
-            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);  // Проверяем тип ответа
-            var returnedUser = Xunit.Assert.IsType<AppUsers>(okResult.Value);  // Проверяем тип объекта в теле ответа
-            Xunit.Assert.Equal(userId, returnedUser.Id);  // Сравниваем ID пользователя
+            var okResult = Xunit.Assert.IsType<OkObjectResult>(result.Result);
+            var returnedUser = Xunit.Assert.IsType<AppUsers>(okResult.Value);  
+            Xunit.Assert.Equal(userId, returnedUser.Id);  
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace UserAPITests
             var result = await _controller.GetUserById(userId, CancellationToken.None);
 
             // Assert
-            Xunit.Assert.IsType<NotFoundResult>(result.Result);  // Проверяем, что возвращен NotFound
+            Xunit.Assert.IsType<NotFoundResult>(result.Result); 
         }
     }
 }
