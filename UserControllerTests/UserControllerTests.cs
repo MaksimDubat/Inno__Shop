@@ -2,9 +2,9 @@
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
-using UserServiceAPI.Controllers;
 using UserServiceAPI.Domain.Entities;
-using UserServiceAPI.Interface;
+using UserServiceAPI.Domain.Interface;
+using UserServiceAPI.WebAPI.Controllers;
 using Xunit;
 
 namespace UserAPITests

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using UserServiceAPI.Infrastructure.Common;
 
 namespace UserServiceAPI.Domain.Interface
 {

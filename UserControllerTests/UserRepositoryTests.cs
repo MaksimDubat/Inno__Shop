@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserServiceAPI.DataBaseAccess;
-using UserServiceAPI.Entities;
-using UserServiceAPI.Infrastructure.Common;
+using UserServiceAPI.Application.Services.Common;
+using UserServiceAPI.Domain.Entities;
+using UserServiceAPI.Infrastructure.DataBase;
 using Xunit;
 
 namespace UserAPITests

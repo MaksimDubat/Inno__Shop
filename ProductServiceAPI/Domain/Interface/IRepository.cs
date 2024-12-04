@@ -13,7 +13,7 @@ namespace ProductServiceAPI.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<List<T>> GetAsync(int id, CancellationToken cancellation);
+        Task<T> GetAsync(int id, CancellationToken cancellation);
         /// <summary>
         /// Добавляет сущность в БД.
         /// </summary>
@@ -33,7 +33,7 @@ namespace ProductServiceAPI.Interface
         /// <param name="entity"></param>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        Task UpdateAsync(T entity, CancellationToken cancellation);
+        Task<T> UpdateAsync(T entity, CancellationToken cancellation);
         /// <summary>
         /// Удаление сущности.
         /// </summary>

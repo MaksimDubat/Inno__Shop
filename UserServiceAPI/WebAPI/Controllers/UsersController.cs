@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
+using UserServiceAPI.Application.JwtSet.JwtAttribute;
 using UserServiceAPI.Domain.Entities;
 using UserServiceAPI.Domain.Interface;
-using UserServiceAPI.Infrastructure.Common;
-using UserServiceAPI.JwtSet.JwtAttribute;
 
 namespace UserServiceAPI.WebAPI.Controllers
 {

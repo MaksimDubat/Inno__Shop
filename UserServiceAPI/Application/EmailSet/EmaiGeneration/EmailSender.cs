@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using UserServiceAPI.Application.EmailSet.EmaiGeneration;
-using UserServiceAPI.Entities;
+
 
 /// <summary>
 /// Класс реализации отправки Email через SMTP-сервер.

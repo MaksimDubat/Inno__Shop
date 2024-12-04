@@ -29,11 +29,11 @@ namespace ProductServiceAPI.FiltrationSet
             }
             if (filter.MinPrice.HasValue)
             {
-                query= query.Where(p => p.Price <= filter.MinPrice.Value);
+                query= query.Where(p => p.Price >= filter.MinPrice.Value);
             }
             if(filter.MaxPrice.HasValue)
             {
-                query = query.Where(p => p.Price >= filter.MaxPrice.Value);
+                query = query.Where(p => p.Price <= filter.MaxPrice.Value);
             }
             if(filter.IsActive.HasValue)
             {

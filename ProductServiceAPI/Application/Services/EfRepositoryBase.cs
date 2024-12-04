@@ -46,17 +46,25 @@ namespace ProductServiceAPI.Infrastructure.Common
                 .ToListAsync(cancellation);
         }
         /// <inheritdoc/>  
-        public async Task<List<T>> GetAsync(int id, CancellationToken cancellation)
+        public async Task<T> GetAsync(int id, CancellationToken cancellation)
         {
             return await MutableDbContext.Set<T>()
-                .Where(p=> p.Id == id && p.IsActive)
-                .ToListAsync(cancellation);
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsActive, cancellation);
         }
         /// <inheritdoc/>  
-        public Task UpdateAsync(T entity, CancellationToken cancellation)
+        public async Task<T> UpdateAsync(T entity, CancellationToken cancellation)
         {
-            MutableDbContext.Update(entity);
-            return MutableDbContext.SaveChangesAsync(cancellation);
+           var product = await MutableDbContext.Set<T>().FindAsync(entity.Id, cancellation);
+           if (product == null)
+           {
+                throw new KeyNotFoundException();
+           }
+           product.Name = entity.Name;
+           product.Description = entity.Description;
+           product.Price = entity.Price;
+           product.IsActive = entity.IsActive;
+           await MutableDbContext.SaveChangesAsync(cancellation);
+           return product;
         }
     }
 }

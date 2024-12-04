@@ -10,6 +10,11 @@ namespace ProductServiceAPI.Interface
     /// </summary>
     public interface IProductFiltration
     {
+        /// <summary>
+        /// Фильтрация продуктов.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="cancellationToken"></param>
         Task<IEnumerable<Product>> GetFilteredProductsAsync(ProductFiltersModel filter, CancellationToken cancellationToken);
     }
 }

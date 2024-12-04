@@ -2,13 +2,14 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ProductServiceAPI.Application.MediatrConfig.Validators;
 using ProductServiceAPI.DataBase;
 using ProductServiceAPI.FiltrationSet;
 using ProductServiceAPI.Infrastructure.Common;
 using ProductServiceAPI.Interface;
 using ProductServiceAPI.JwtSet;
-using ProductServiceAPI.Validation;
 using System.Text;
 
 namespace ProductServiceAPI.Registrations
@@ -48,6 +49,7 @@ namespace ProductServiceAPI.Registrations
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
                     };
                 });
+            services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(InnoShopProductRegistrar).Assembly));
 
         }
 

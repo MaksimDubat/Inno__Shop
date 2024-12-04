@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http;
+using UserServiceAPI.Application.JwtSet.JwtAttribute;
 using UserServiceAPI.Application.Models.LoginModels;
 using UserServiceAPI.Application.Models.PasswordResetModels;
 using UserServiceAPI.Application.Models.RegistartionModels;
+using UserServiceAPI.Application.Services.Common;
 using UserServiceAPI.Domain.Entities;
 using UserServiceAPI.Domain.Interface;
-using UserServiceAPI.Entities;
 using UserServiceAPI.Infrastructure.DataBase;
-using UserServiceAPI.JwtSet.JwtAttribute;
 
 namespace UserServiceAPI.WebAPI.Controllers
 {
@@ -193,6 +194,34 @@ namespace UserServiceAPI.WebAPI.Controllers
             return Ok("matched");
 
         }
+        /// <summary>
+        /// Деактивация пользователя.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellation"></param>
+        //[HttpPost("deactivateUser/{id}")]
+        //[JwtAuthorize(Roles = "Admin")]
+        //public async Task<IActionResult> DeactivateUser(int id, CancellationToken cancellation)
+        //{
+        //    var user = await _userRepository.GetAsync(id, cancellation);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    user.IsActive = false;
+        //    await _mutableDbContext.SaveChangesAsync(cancellation);
+
+        //    var httpClient = _httpClientFactory.CreateClient("ProductService");
+        //    var response = await httpClient.PostAsJsonAsync("api/product/status",
+        //        new { id, isActive = false }, cancellation);
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        return BadRequest("deactivation error");
+        //    }
+        //    return Ok("diactivation ok");
+        //}
 
     }
+
 }
+

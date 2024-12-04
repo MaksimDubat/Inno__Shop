@@ -1,6 +1,3 @@
-
-using Microsoft.EntityFrameworkCore;
-using UserServiceAPI.DataBaseAccess;
 using UserServiceAPI.WebAPI.CustomExceptionsFilter;
 using UserServiceAPI.WebAPI.Registrations;
 

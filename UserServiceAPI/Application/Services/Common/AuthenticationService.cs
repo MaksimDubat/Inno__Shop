@@ -3,7 +3,6 @@ using System.Security.Claims;
 using UserServiceAPI.Application.JwtSet.JwtGeneration;
 using UserServiceAPI.Domain.Entities;
 using UserServiceAPI.Domain.Interface;
-using UserServiceAPI.Entities;
 using UserServiceAPI.Infrastructure.DataBase;
 
 namespace UserServiceAPI.Application.Services.Common

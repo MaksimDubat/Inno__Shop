@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using ProductServiceAPI.CustomExceptionsFilter;
 using ProductServiceAPI.Registrations;
 
@@ -8,8 +9,8 @@ namespace ProductServiceAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-           
 
+            
             // Add services to the container.
             InnoShopProductRegistrar.RegisterRepositories(builder.Services, builder.Configuration);
             builder.Services.AddControllers( options =>
@@ -19,6 +20,7 @@ namespace ProductServiceAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 

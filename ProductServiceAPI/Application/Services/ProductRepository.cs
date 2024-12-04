@@ -15,7 +15,11 @@ namespace ProductServiceAPI.Infrastructure.Common
         {
             _context = mutableDbContext;
         }
-
+        /// <summary>
+        /// Получение наименование товара.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="cancellation"></param>
         public async Task<Product> GetByNameAsync(string name, CancellationToken cancellation)
         {
             return await _context.Products.FirstOrDefaultAsync(u => u.Name == name, cancellation); 
