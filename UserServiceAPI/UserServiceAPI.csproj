@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\MediatrConfig\AccountMediatrConfig\" />
     <Folder Include="Infrastructure\Migrations\" />
   </ItemGroup>
 

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Xml.Linq;
 using UserServiceAPI.Application.JwtSet.JwtAttribute;
+using UserServiceAPI.Application.MediatrConfig.UserMediatrConfig.Commands;
+using UserServiceAPI.Application.MediatrConfig.UserMediatrConfig.Queries;
 using UserServiceAPI.Domain.Entities;
 using UserServiceAPI.Domain.Interface;
 
@@ -14,11 +17,11 @@ namespace UserServiceAPI.WebAPI.Controllers
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IMediator _mediator;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IMediator mediator)
         {
-            _userRepository = userRepository;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -29,12 +32,13 @@ namespace UserServiceAPI.WebAPI.Controllers
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AppUsers>>> GetAllUsers(CancellationToken cancellation)
         {
-            var users = await _userRepository.GetAllAsync(cancellation);
-            if (users == null)
+           var query = new GetAllUsersQuery();
+           var result = await _mediator.Send(query, cancellation);
+            if (result == null)
             {
                 return NotFound();
             }
-            return Ok(users);
+            return Ok(result);
         }
         /// <summary>
         /// Получение пользователя по идентификатору.
@@ -45,12 +49,13 @@ namespace UserServiceAPI.WebAPI.Controllers
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> GetUserById(int id, CancellationToken cancellation)
         {
-            var user = await _userRepository.GetAsync(id, cancellation);
-            if (user == null)
+            var query = new GetUserByIdQuery(id);
+            var result =await  _mediator.Send(query,cancellation);
+            if (result == null)
             {
-                return NotFound("not admin");
+                return NotFound();
             }
-            return Ok(user);
+            return Ok(result);
         }
 
         /// <summary>
@@ -62,8 +67,13 @@ namespace UserServiceAPI.WebAPI.Controllers
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> AddUser(AppUsers user, CancellationToken cancellation)
         {
-            await _userRepository.AddAsync(user, cancellation);
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            var command = new AddUserCommand(user);
+            var result = await _mediator.Send(command, cancellation);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
         }
         /// <summary>
         /// Обновление пользователя.
@@ -80,8 +90,13 @@ namespace UserServiceAPI.WebAPI.Controllers
                 return BadRequest("error");
             }
 
-            await _userRepository.UpdateAsync(user, cancellation);
-            return Ok("updated");
+            var command = new UpdateUserCommand(id,user);
+            var result = await _mediator.Send(command,cancellation);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
         }
         /// <summary>
         /// Удаление пользователя.
@@ -92,13 +107,9 @@ namespace UserServiceAPI.WebAPI.Controllers
         [JwtAuthorize(Roles = "Admin")]
         public async Task<ActionResult<AppUsers>> DeletUser(int id, CancellationToken cancellation)
         {
-            var user = await _userRepository.GetAsync(id, cancellation);
-            if (user == null)
-            {
-                return NotFound("not admin");
-            }
-            await _userRepository.DeleteAsync(id, cancellation);
-            return Ok("deleted");
+           var command = new DeleteUserCommand(id);
+           var result = await _mediator.Send(command.Id,cancellation);
+           return Ok(result);
         }
         /// <summary>
         /// Получение Email пользователя.
@@ -108,19 +119,15 @@ namespace UserServiceAPI.WebAPI.Controllers
         /// <param name="id"></param>
         [HttpGet("byemail")]
         [JwtAuthorize(Roles = "Admin")]
-        public async Task<ActionResult<AppUsers>> GetUserEmail(string email, CancellationToken cancellation, int id)
+        public async Task<ActionResult<AppUsers>> GetUserEmail(string email, CancellationToken cancellation)
         {
-            var user = await _userRepository.GetAsync(id, cancellation);
-            if (user == null)
-            {
-                return NotFound("not admin");
-            }
-            var userEmail = await _userRepository.GetUserByEmailAsync(email, cancellation);
-            if (userEmail == null)
+            var query = new GetUserByEmailQuery(email);
+            var result = await _mediator.Send(query,cancellation);
+            if (result == null)
             {
                 return NotFound();
             }
-            return Ok(userEmail);
+            return Ok(result);
         }
 
 

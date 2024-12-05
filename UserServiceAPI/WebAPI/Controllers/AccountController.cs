@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http;
 using UserServiceAPI.Application.JwtSet.JwtAttribute;
+using UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Commands;
 using UserServiceAPI.Application.Models.LoginModels;
 using UserServiceAPI.Application.Models.PasswordResetModels;
 using UserServiceAPI.Application.Models.RegistartionModels;
@@ -23,37 +25,26 @@ namespace UserServiceAPI.WebAPI.Controllers
     [Route("api/auth")]
     public class AccountController : Controller
     {
-        private readonly IAuthenticationService _authenticationService;
-        private readonly UserManager<AppUsers> _userManager;
-        private readonly IEmailSender _emailSender;
-        private readonly MutableInnoShopDbContext _dbContext;
-
-        public AccountController(IAuthenticationService authenticationService, UserManager<AppUsers> userManager, IEmailSender emailSender, MutableInnoShopDbContext dbContext)
+        private readonly IMediator _mediator;
+        public AccountController(IMediator mediator)
         {
-
-            _authenticationService = authenticationService;
-            _userManager = userManager;
-            _emailSender = emailSender;
-            _dbContext = dbContext;
+            _mediator = mediator;
         }
+
         /// <summary>
         /// Осуществление входа пользователя.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="cancellation"></param>
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginModel model, CancellationToken cancellation)
+        public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellation)
         {
-            try
+            var token = await _mediator.Send(new LoginCommand(model.Email, model.Password), cancellation);
+            if(token.IsNullOrEmpty())
             {
-                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
-                return Ok(new { Message = " log in god", Token = token });
+                return Unauthorized();
             }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized("Invalid");
-            }
-
+            return Ok(new { Message = "Login ok", token });
         }
         /// <summary>
         /// Осуществление выхода пользователя.
@@ -199,27 +190,27 @@ namespace UserServiceAPI.WebAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellation"></param>
-        //[HttpPost("deactivateUser/{id}")]
-        //[JwtAuthorize(Roles = "Admin")]
-        //public async Task<IActionResult> DeactivateUser(int id, CancellationToken cancellation)
-        //{
-        //    var user = await _userRepository.GetAsync(id, cancellation);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    user.IsActive = false;
-        //    await _mutableDbContext.SaveChangesAsync(cancellation);
+        [HttpPost("deactivateUser/{id}")]
+        [JwtAuthorize(Roles = "Admin")]
+        public async Task<IActionResult> DeactivateUser(int id, CancellationToken cancellation)
+        {
+            var user = await _userRepository.GetAsync(id, cancellation);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.IsActive = false;
+            await _mutableDbContext.SaveChangesAsync(cancellation);
 
-        //    var httpClient = _httpClientFactory.CreateClient("ProductService");
-        //    var response = await httpClient.PostAsJsonAsync("api/product/status",
-        //        new { id, isActive = false }, cancellation);
-        //    if (!response.IsSuccessStatusCode)
-        //    {
-        //        return BadRequest("deactivation error");
-        //    }
-        //    return Ok("diactivation ok");
-        //}
+            var httpClient = _httpClientFactory.CreateClient("ProductService");
+            var response = await httpClient.PostAsJsonAsync("api/product/status",
+                new { id, isActive = false }, cancellation);
+            if (!response.IsSuccessStatusCode)
+            {
+                return BadRequest("deactivation error");
+            }
+            return Ok("diactivation ok");
+        }
 
     }
 

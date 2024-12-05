@@ -60,7 +60,7 @@ namespace UserServiceAPI.WebAPI.Registrations
 
             services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
             services.AddScoped<IEmailSender, EmailSender>();
-
+            services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(InnoShopRegistrar).Assembly));
 
 
 
