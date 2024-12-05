@@ -28,5 +28,13 @@ namespace UserServiceAPI.Domain.Interface
         /// <param name="password">Пароль.</param>
         /// <param name="cancellation">Токен отмены операции.</param>
         Task<IdentityResult> RegisterAsync(string email, string name, string password, CancellationToken cancellation);
+        /// <summary>
+        /// Осущкствляет сброс пароля пользователя.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="token"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="cancellation"></param>
+        Task<bool> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellation);
     }
 }

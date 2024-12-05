@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using UserServiceAPI.Application.Models.LoginModels;
 
 namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Commands
 {
@@ -8,18 +9,13 @@ namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Commands
     public class LoginCommand : IRequest<string>
     {
         /// <summary>
-        /// Email пользователя.
+        /// Модель входа.
         /// </summary>
-        public string Email { get; set; }
-        /// <summary>
-        /// Пароль пользователя.
-        /// </summary>
-        public string Password { get; set; }
+        public LoginModel Model { get; set; }
 
-        public LoginCommand(string email, string password)
+        public LoginCommand(LoginModel model)
         {
-            Email = email;
-            Password = password;
-        }
+            Model = model;
+        }   
     }
 }

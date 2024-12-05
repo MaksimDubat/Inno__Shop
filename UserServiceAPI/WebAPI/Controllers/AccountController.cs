@@ -39,12 +39,16 @@ namespace UserServiceAPI.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model, CancellationToken cancellation)
         {
-            var token = await _mediator.Send(new LoginCommand(model.Email, model.Password), cancellation);
-            if(token.IsNullOrEmpty())
+            try
+            {
+                var command = new LoginCommand(model);
+                var token = await _mediator.Send(command, cancellation);
+                return Ok(new { Token = token });
+            }
+            catch (UnauthorizedAccessException ex)
             {
                 return Unauthorized();
             }
-            return Ok(new { Message = "Login ok", token });
         }
         /// <summary>
         /// Осуществление выхода пользователя.
@@ -54,8 +58,8 @@ namespace UserServiceAPI.WebAPI.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(CancellationToken cancellation)
         {
-            await _authenticationService.SignOutAsync(cancellation);
-            return Ok("logout");
+            await _mediator.Send(new LogoutCommand(), cancellation);
+            return Ok();
         }
         /// <summary>
         /// Осуществление регистрации пользователя.
@@ -65,75 +69,29 @@ namespace UserServiceAPI.WebAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegistrationModel model, CancellationToken cancellation)
         {
-            var result = await _authenticationService.RegisterAsync(model.Email, model.Name, model.Password, cancellation);
-            if (result.Succeeded)
+            var command = new RegisterCommand(model);
+            var result = await _mediator.Send(command, cancellation);
+            if(result.Errors == null)
             {
-                var token = await _authenticationService.SignInAsync(model.Email, model.Password, cancellation);
-                return Ok(new { Message = " reg god", Token = token });
+                return BadRequest();
             }
-            else
-            {
-                var errors = result.Errors?.Select(x => x.Description).ToList();
-                return BadRequest(errors);
-            }
+            return Ok();
         }
         /// <summary>
-        /// Осуществление функционала при потери пароля.
+        /// Осуществление функционала для восстановления пароля.
         /// </summary>
         /// <param name="model"></param>
         [HttpPost("ForgotPassword")]
         [JwtAuthorize(Roles = "Admin, User")]
-        public async Task<IActionResult> ForgotPassword(PasswordResetModel model)
+        public async Task<IActionResult> ForgotPassword([FromBody] PasswordResetModel model, CancellationToken cancellation)
         {
-            if (!ModelState.IsValid)
+            var command = new ForgotPasswordCommand(model);
+            var result = await _mediator.Send(command,cancellation);
+            if (!result)
             {
-                return BadRequest(ModelState);
+                return BadRequest();    
             }
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Register), new { email = model.Email });
-            }
-            else if (user != null)
-            {
-                return RedirectToAction(nameof(ResetPassword), new { email = model.Email });
-            }
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var url = Url.Action(
-                action: nameof(ResetPassword),
-                controller: "Account",
-                values: new { token, email = user.Email },
-                protocol: Request.Scheme
-                );
-            var emailSubject = "Reset";
-            var emailBody = $"reset <a href = '{url}'>here</a>";
-            await _emailSender.SendEmailAsync(user.Email, emailSubject, emailBody);
-            return Ok(new { Message = " get it" });
-
-        }
-        /// <summary>
-        /// Осуществление функции восстановления пароля.
-        /// </summary>
-        /// <param name="model"></param>
-        [HttpPost("ResetPassword")]
-        [JwtAuthorize(Roles = "Admin, User")]
-        public async Task<IActionResult> ResetPassword(PasswordResetModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null)
-            {
-                return BadRequest("not found");
-            }
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-            }
-            return Ok(new { Message = "reset good" });
+            return Ok();    
         }
         /// <summary>
         /// Осуществление отправки для подтверждения.
@@ -141,7 +99,7 @@ namespace UserServiceAPI.WebAPI.Controllers
         /// <param name="email"></param>
         [HttpPost("sendcode")]
         [JwtAuthorize(Roles = "Admin, User")]
-        public async Task<IActionResult> SendConfirmCode(string email)
+        public async Task<IActionResult> SendConfirmCode([FromQuery] string email)
         {
             if (string.IsNullOrEmpty(email))
             {

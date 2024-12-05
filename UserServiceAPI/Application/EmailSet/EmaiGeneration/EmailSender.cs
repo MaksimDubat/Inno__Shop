@@ -17,7 +17,12 @@ public class EmailSender : IEmailSender
     {
         _emailOptions = emailOptions.Value;
     }
-
+    /// <summary>
+    /// Отправка Email пользователю.
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="subject"></param>
+    /// <param name="message"></param>
     public async Task SendEmailAsync(string email, string subject, string message)
     {
         var smtpClient = new SmtpClient(_emailOptions.SmtpServer)

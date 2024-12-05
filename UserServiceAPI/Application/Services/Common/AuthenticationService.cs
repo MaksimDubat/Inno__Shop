@@ -17,7 +17,6 @@ namespace UserServiceAPI.Application.Services.Common
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        /// <inheritdoc/>
         public AuthenticationService(
             SignInManager<AppUsers> signInManager,
             UserManager<AppUsers> userManager,
@@ -75,6 +74,17 @@ namespace UserServiceAPI.Application.Services.Common
         public Task SignOutAsync(CancellationToken cancellation)
         {
             return _signInManager.SignOutAsync();
+        }
+        /// <inheritdoc/>
+        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellation)
+        {
+            var user = await _userManager.FindByNameAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
+            var result = await _userManager.ResetPasswordAsync(user,token, newPassword);
+            return result.Succeeded;    
         }
     }
 }

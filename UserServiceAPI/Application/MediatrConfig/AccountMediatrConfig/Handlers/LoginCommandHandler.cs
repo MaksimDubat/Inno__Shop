@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using UserServiceAPI.Application.JwtSet.JwtGeneration;
 using UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Commands;
 using UserServiceAPI.Domain.Entities;
+using UserServiceAPI.Domain.Interface;
 
 namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Handlers
 {
@@ -11,28 +12,24 @@ namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Handlers
     /// </summary>
     public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
     {
-        private readonly UserManager<AppUsers> _userManager;
-        private readonly SignInManager<AppUsers> _signInManager;
-        private readonly IJwtGenerator _jwtGenerator;
+        private readonly IAuthenticationService _authenticationService;
 
-        public LoginCommandHandler(UserManager<AppUsers> userManager, SignInManager<AppUsers> signInManager, IJwtGenerator jwtGenerator)
+        public LoginCommandHandler(IAuthenticationService authenticationService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _jwtGenerator = jwtGenerator;
+            _authenticationService = authenticationService;
         }
 
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.Email)
-                    ?? throw new UnauthorizedAccessException();
-            if(!await _userManager.CheckPasswordAsync(user, request.Password))
+            try
             {
-                throw new UnauthorizedAccessException();
+                var token = await _authenticationService.SignInAsync(request.Email, request.Password, cancellationToken);
+                return token;
             }
-            await _signInManager.SignInAsync(user, isPersistent: true);
-            var roles  = await _userManager.GetRolesAsync(user);
-            return _jwtGenerator.GenerateToken(user, roles);
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException("invalid", ex);
+            }
         }
     }
 }
