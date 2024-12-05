@@ -23,7 +23,7 @@ namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Handlers
         {
             try
             {
-                var token = await _authenticationService.SignInAsync(request.Email, request.Password, cancellationToken);
+                var token = await _authenticationService.SignInAsync(request.Model.Email, request.Model.Email, cancellationToken);
                 return token;
             }
             catch (UnauthorizedAccessException ex)

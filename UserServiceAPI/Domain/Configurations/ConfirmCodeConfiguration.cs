@@ -10,9 +10,7 @@ namespace UserServiceAPI.Domain.Configurations
     public class ConfirmCodeConfiguration : IEntityTypeConfiguration<ConfirmCode>
     {
         public void Configure(EntityTypeBuilder<ConfirmCode> builder)
-        {
-            builder.ToTable("ConfirmCode");
-            builder.HasKey(x => x.Id);
+        { 
             builder.Property(x => x.Email)
                 .IsRequired()
                 .HasMaxLength(155);

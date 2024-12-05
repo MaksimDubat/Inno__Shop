@@ -4,7 +4,7 @@ using UserServiceAPI.Application.Models.PasswordResetModels;
 namespace UserServiceAPI.Application.MediatrConfig.AccountMediatrConfig.Commands
 {
     /// <summary>
-    /// Модель запроса сброса пароля.
+    /// Модель команды сброса пароля.
     /// </summary>
     public class ForgotPasswordCommand : IRequest<bool>
     {

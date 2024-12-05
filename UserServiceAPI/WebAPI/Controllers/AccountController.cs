@@ -45,7 +45,7 @@ namespace UserServiceAPI.WebAPI.Controllers
                 var token = await _mediator.Send(command, cancellation);
                 return Ok(new { Token = token });
             }
-            catch (UnauthorizedAccessException ex)
+            catch
             {
                 return Unauthorized();
             }
@@ -99,49 +99,15 @@ namespace UserServiceAPI.WebAPI.Controllers
         /// <param name="email"></param>
         [HttpPost("sendcode")]
         [JwtAuthorize(Roles = "Admin, User")]
-        public async Task<IActionResult> SendConfirmCode([FromQuery] string email)
+        public async Task<IActionResult> SendConfirmCode([FromQuery] string email, CancellationToken cancellation)
         {
-            if (string.IsNullOrEmpty(email))
+            var command = new SendEmailCommand(email,"Confirm code", null);
+            var result = await _mediator.Send(command, cancellation);
+            if (!result)
             {
-                return BadRequest("invalid");
+                return BadRequest();
             }
-            var confirmCode = new Random().Next(10000, 99999).ToString();
-            var code = new ConfirmCode
-            {
-                Email = email,
-                Code = confirmCode,
-                ExpiryDate = DateTime.UtcNow.AddMinutes(10),
-            };
-            _dbContext.ConfirmCodes.Add(code);
-            await _dbContext.SaveChangesAsync();
-            return Ok("code was sended");
-        }
-        /// <summary>
-        /// Осуществление проверки кода.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="code"></param>
-        [HttpPost("verifycode")]
-        [JwtAuthorize(Roles = "Admin, User")]
-        public async Task<IActionResult> VerifyConfirmCode(string email, string code)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest("error");
-            }
-            var codeEntry = await _dbContext.ConfirmCodes.FirstOrDefaultAsync(c => c.Email == email && c.Code == code);
-            if (codeEntry == null)
-            {
-                return BadRequest("error code");
-            }
-            if (codeEntry.ExpiryDate < DateTime.UtcNow)
-            {
-                return BadRequest("time is out");
-            }
-            _dbContext.ConfirmCodes.Remove(codeEntry);
-            await _dbContext.SaveChangesAsync();
-            return Ok("matched");
-
+            return Ok();
         }
         /// <summary>
         /// Деактивация пользователя.
@@ -150,24 +116,15 @@ namespace UserServiceAPI.WebAPI.Controllers
         /// <param name="cancellation"></param>
         [HttpPost("deactivateUser/{id}")]
         [JwtAuthorize(Roles = "Admin")]
-        public async Task<IActionResult> DeactivateUser(int id, CancellationToken cancellation)
+        public async Task<IActionResult> DeactivateUser([FromBody] int id, CancellationToken cancellation)
         {
-            var user = await _userRepository.GetAsync(id, cancellation);
-            if (user == null)
+            var command = new DeactivateUserCommand(id);
+            var result = await _mediator.Send(command, cancellation);
+            if (!result)
             {
-                return NotFound();
+                return BadRequest();
             }
-            user.IsActive = false;
-            await _mutableDbContext.SaveChangesAsync(cancellation);
-
-            var httpClient = _httpClientFactory.CreateClient("ProductService");
-            var response = await httpClient.PostAsJsonAsync("api/product/status",
-                new { id, isActive = false }, cancellation);
-            if (!response.IsSuccessStatusCode)
-            {
-                return BadRequest("deactivation error");
-            }
-            return Ok("diactivation ok");
+            return Ok();
         }
 
     }
